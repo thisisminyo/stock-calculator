@@ -8,8 +8,8 @@ export default function SearchBar() {
     <input
       value={query}
       onChange={(e) => setQuery(e.target.value)}
-      placeholder="Search stock (AAPL, TSLA...)"
-      className="w-full p-2 border rounded-xl shadow"
+      placeholder="Enter stock symbol (AAPL, GOOGL, TSLA, MSFT...)"
+      className="w-full p-3 border-2 border-gray-200 rounded-xl shadow-sm focus:border-blue-500 focus:outline-none transition-colors placeholder-gray-400"
     />
   );
 }

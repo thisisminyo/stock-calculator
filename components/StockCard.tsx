@@ -1,8 +1,26 @@
 "use client";
 import { useStockStore } from "../store/stockStore";
+import axios from "axios";
 
 export default function StockCard() {
-  const { stockData, isLoading, error } = useStockStore();
+  const { stockData, isLoading, error, setQuery, setStockData, setIsLoading, setError } = useStockStore();
+
+  const handleStockClick = async (symbol: string) => {
+    setQuery(symbol);
+    setIsLoading(true);
+    setError(null);
+    setStockData(null);
+
+    try {
+      const res = await axios.get(`/api/stocks?query=${symbol}`);
+      setStockData(res.data);
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || "Failed to fetch stock data";
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -28,7 +46,139 @@ export default function StockCard() {
     );
   }
 
-  if (!stockData) return null;
+  if (!stockData) {
+    return (
+      <div className="space-y-6">
+        {/* Welcome/Empty State Card */}
+        <div className="p-8 border rounded-xl shadow-lg bg-gradient-to-br from-blue-50 to-indigo-50">
+          <div className="text-center">
+            <div className="text-6xl mb-4">📊</div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-3">Welcome to Stock Calculator</h2>
+            <p className="text-gray-600 mb-6">
+              Search for any stock symbol above to get instant P/E ratios, financial metrics, and professional analysis
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 mt-6">
+            {/* Popular Stocks */}
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                🔥 Popular Stocks to Try
+              </h3>
+              <div className="space-y-3">
+                <button 
+                  onClick={() => handleStockClick('AAPL')}
+                  className="w-full flex justify-between items-center py-3 px-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors text-left"
+                >
+                  <div>
+                    <span className="font-medium text-blue-600">AAPL</span>
+                    <span className="text-gray-500 ml-2">Apple Inc.</span>
+                  </div>
+                  <span className="text-sm text-gray-500">Tech Giant</span>
+                </button>
+                <button 
+                  onClick={() => handleStockClick('GOOGL')}
+                  className="w-full flex justify-between items-center py-3 px-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors text-left"
+                >
+                  <div>
+                    <span className="font-medium text-blue-600">GOOGL</span>
+                    <span className="text-gray-500 ml-2">Alphabet</span>
+                  </div>
+                  <span className="text-sm text-gray-500">Search & AI</span>
+                </button>
+                <button 
+                  onClick={() => handleStockClick('TSLA')}
+                  className="w-full flex justify-between items-center py-3 px-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors text-left"
+                >
+                  <div>
+                    <span className="font-medium text-blue-600">TSLA</span>
+                    <span className="text-gray-500 ml-2">Tesla Inc.</span>
+                  </div>
+                  <span className="text-sm text-gray-500">EV Leader</span>
+                </button>
+                <button 
+                  onClick={() => handleStockClick('MSFT')}
+                  className="w-full flex justify-between items-center py-3 px-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors text-left"
+                >
+                  <div>
+                    <span className="font-medium text-blue-600">MSFT</span>
+                    <span className="text-gray-500 ml-2">Microsoft</span>
+                  </div>
+                  <span className="text-sm text-gray-500">Software</span>
+                </button>
+                <button 
+                  onClick={() => handleStockClick('NVDA')}
+                  className="w-full flex justify-between items-center py-3 px-4 hover:bg-gray-50 rounded-lg transition-colors text-left"
+                >
+                  <div>
+                    <span className="font-medium text-blue-600">NVDA</span>
+                    <span className="text-gray-500 ml-2">NVIDIA</span>
+                  </div>
+                  <span className="text-sm text-gray-500">AI Chips</span>
+                </button>
+              </div>
+            </div>
+
+            {/* What You'll Get */}
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                ✨ What You'll Get
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="text-green-500 mt-0.5">📈</div>
+                  <div>
+                    <div className="font-medium text-gray-700">P/E Ratio Analysis</div>
+                    <div className="text-sm text-gray-500">See if stocks are overvalued/undervalued</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="text-blue-500 mt-0.5">💰</div>
+                  <div>
+                    <div className="font-medium text-gray-700">Financial Metrics</div>
+                    <div className="text-sm text-gray-500">Market cap, EPS, Beta, dividends</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="text-purple-500 mt-0.5">🧮</div>
+                  <div>
+                    <div className="font-medium text-gray-700">Visual Calculations</div>
+                    <div className="text-sm text-gray-500">See exactly how P/E ratios work</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="text-orange-500 mt-0.5">📊</div>
+                  <div>
+                    <div className="font-medium text-gray-700">Smart Analysis</div>
+                    <div className="text-sm text-gray-500">Automatic insights and trends</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="text-teal-500 mt-0.5">⚡</div>
+                  <div>
+                    <div className="font-medium text-gray-700">Real-Time Data</div>
+                    <div className="text-sm text-gray-500">Live market data from Alpha Vantage</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Tips */}
+          <div className="mt-6 p-4 bg-white rounded-lg border-l-4 border-blue-500">
+            <h4 className="font-semibold text-gray-800 mb-2">💡 Quick Tips</h4>
+            <div className="text-sm text-gray-600 space-y-1">
+              <div>• <strong>Click the stocks above</strong> to try them instantly</div>
+              <div>• Use stock ticker symbols (AAPL, GOOGL, MSFT)</div>
+              <div>• Search works for most US-listed companies</div>
+              <div>• P/E ratios help identify value vs growth stocks</div>
+              <div>• High P/E (>25) = Growth expectations, Low P/E (<15) = Value opportunity</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const changeColor = parseFloat(stockData.change) >= 0 ? "text-green-600" : "text-red-600";
   const changeIcon = parseFloat(stockData.change) >= 0 ? "📈" : "📉";

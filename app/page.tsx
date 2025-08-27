@@ -61,8 +61,13 @@ export default function Home() {
             </button>
           </div>
           
-          <div className="mt-3 text-sm text-gray-500">
-            Try searching for: AAPL, GOOGL, MSFT, TSLA, AMZN, META, NVDA
+          <div className="mt-4 text-center">
+            <div className="text-sm text-gray-600 mb-2">
+              <strong>Popular searches:</strong> AAPL, GOOGL, MSFT, TSLA, AMZN, META, NVDA
+            </div>
+            <div className="text-xs text-gray-500">
+              Or click any stock below to get started instantly 👇
+            </div>
           </div>
         </div>
 
