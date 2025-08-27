@@ -36,7 +36,7 @@ export default function StockCard() {
   }
 
   if (error) {
-    const isNotFound = error.includes("No results found");
+    const isNotFound = error.includes("No results found") || error.includes("appears to be invalid");
     
     return (
       <div className={`p-6 mt-4 border rounded-xl shadow ${isNotFound ? 'border-orange-300 bg-orange-50' : 'border-red-300 bg-red-50'}`}>

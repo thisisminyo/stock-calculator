@@ -48,6 +48,25 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Stock not found" }, { status: 404 });
     }
 
+    // Validate that we have essential stock data
+    const hasEssentialData = overviewData["Sector"] && 
+                            overviewData["Name"] && 
+                            overviewData["Sector"] !== "None" && 
+                            overviewData["Name"] !== "None" &&
+                            overviewData["Sector"] !== "N/A" &&
+                            overviewData["Name"] !== "N/A";
+    
+    // Additional check for invalid/missing company data
+    const hasValidCompanyData = overviewData["MarketCapitalization"] && 
+                               overviewData["MarketCapitalization"] !== "None" &&
+                               overviewData["MarketCapitalization"] !== "N/A";
+    
+    if (!hasEssentialData || !hasValidCompanyData) {
+      return NextResponse.json({ 
+        error: `Stock symbol "${symbol}" appears to be invalid or the company may not be publicly traded. Please check the symbol and try again.` 
+      }, { status: 404 });
+    }
+
     // Helper function to format numbers
     const formatNumber = (value: string) => {
       if (!value || value === "None" || value === "N/A") return null;

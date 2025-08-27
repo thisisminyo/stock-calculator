@@ -25,7 +25,13 @@ export default function Home() {
       setStockData(res.data);
     } catch (error: any) {
       if (error.response?.status === 404) {
-        setError(`No results found for "${queryToSearch}". Please check the stock symbol and try again.`);
+        // Check if it's our custom validation error
+        const errorMessage = error.response?.data?.error;
+        if (errorMessage && errorMessage.includes("appears to be invalid")) {
+          setError(errorMessage);
+        } else {
+          setError(`No results found for "${queryToSearch}". Please check the stock symbol and try again.`);
+        }
       } else if (error.response?.status === 429) {
         setError("API rate limit reached. Please wait a moment and try again.");
       } else {
