@@ -1,25 +1,27 @@
 "use client";
-import SearchBar from "../components/SearchBar";
+import { useState } from "react";
 import StockCard from "../components/StockCard";
 import { useStockStore } from "../store/stockStore";
 import axios from "axios";
 
 export default function Home() {
-  const { query, setStockData, setIsLoading, setError, isLoading } = useStockStore();
+  const [searchQuery, setSearchQuery] = useState("");
+  const { setStockData, setIsLoading, setError, isLoading, setQuery } = useStockStore();
 
-  async function handleSearch() {
-    console.log('handleSearch called, query:', query, 'isLoading:', isLoading);
-    if (!query.trim()) {
+  async function handleSearch(queryToSearch = searchQuery) {
+    console.log('handleSearch called, query:', queryToSearch, 'isLoading:', isLoading);
+    if (!queryToSearch.trim()) {
       console.log('Query is empty, returning early');
       return;
     }
     
+    setQuery(queryToSearch); // Update the store with the searched query
     setIsLoading(true);
     setError(null);
     setStockData(null);
 
     try {
-      const res = await axios.get(`/api/stocks?query=${query}`);
+      const res = await axios.get(`/api/stocks?query=${queryToSearch}`);
       setStockData(res.data);
     } catch (error: any) {
       const errorMessage = error.response?.data?.error || "Failed to fetch stock data";
@@ -30,7 +32,7 @@ export default function Home() {
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && query.trim() && !isLoading) {
+    if (e.key === 'Enter' && searchQuery.trim() && !isLoading) {
       handleSearch();
     }
   };
@@ -46,13 +48,19 @@ export default function Home() {
         
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
           <div className="flex gap-3">
-            <SearchBar onKeyPress={handleKeyPress} />
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleKeyPress}
+              placeholder="Enter stock symbol (AAPL, GOOGL, TSLA, MSFT...)"
+              className="w-full p-3 border-2 border-gray-200 rounded-xl shadow-sm focus:border-blue-500 focus:outline-none transition-colors placeholder-gray-400"
+            />
             <button 
               onClick={() => {
-                console.log('Button clicked! Query:', query, 'Trim:', query.trim(), 'IsLoading:', isLoading);
+                console.log('Button clicked! Query:', searchQuery, 'Trim:', searchQuery.trim(), 'IsLoading:', isLoading);
                 handleSearch();
               }} 
-              disabled={isLoading || !query.trim()}
+              disabled={isLoading || !searchQuery.trim()}
               className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl font-medium transition-colors flex items-center gap-2"
             >
               {isLoading ? (
@@ -70,7 +78,19 @@ export default function Home() {
           
           <div className="mt-4 text-center">
             <div className="text-sm text-gray-600 mb-2">
-              <strong>Popular searches:</strong> AAPL, GOOGL, MSFT, TSLA, AMZN, META, NVDA
+              <strong>Quick search:</strong>
+              {['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'NVDA'].map(symbol => (
+                <button 
+                  key={symbol}
+                  onClick={() => {
+                    setSearchQuery(symbol);
+                    handleSearch(symbol);
+                  }}
+                  className="ml-2 px-2 py-1 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                >
+                  {symbol}
+                </button>
+              ))}
             </div>
             <div className="text-xs text-gray-500">
               Or click any stock below to get started instantly 👇
