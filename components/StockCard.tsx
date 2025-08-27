@@ -38,42 +38,106 @@ export default function StockCard() {
   if (error) {
     const isNotFound = error.includes("No results found") || error.includes("appears to be invalid");
     
-    return (
-      <div className={`p-6 mt-4 border rounded-xl shadow ${isNotFound ? 'border-orange-300 bg-orange-50' : 'border-red-300 bg-red-50'}`}>
-        <div className="flex items-start gap-3">
-          <div className={`${isNotFound ? 'text-orange-500' : 'text-red-600'} mt-0.5`}>
-            {isNotFound ? '🔍' : '⚠️'}
+    if (isNotFound) {
+      return (
+        <div className="mt-6 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl shadow-lg overflow-hidden">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4">
+            <div className="flex items-center gap-3">
+              <div className="text-2xl">🔍</div>
+              <div>
+                <h2 className="text-xl font-bold text-white">Stock Not Found</h2>
+                <p className="text-blue-100 text-sm">Let's help you find what you're looking for</p>
+              </div>
+            </div>
           </div>
-          <div className="flex-1">
-            <p className={`${isNotFound ? 'text-orange-700' : 'text-red-700'} font-medium mb-2`}>
-              {isNotFound ? 'Stock Not Found' : 'Error'}
-            </p>
-            <p className={`${isNotFound ? 'text-orange-600' : 'text-red-600'} text-sm mb-3`}>
-              {error}
-            </p>
-            {isNotFound && (
-              <div className="mt-3">
-                <p className="text-orange-600 text-sm font-medium mb-2">💡 Suggestions:</p>
-                <ul className="text-orange-600 text-sm space-y-1">
-                  <li>• Make sure you're using the correct ticker symbol (e.g., AAPL for Apple)</li>
-                  <li>• Try popular stocks: AAPL, GOOGL, MSFT, TSLA, AMZN, META, NVDA</li>
-                  <li>• Check if the company is publicly traded</li>
-                  <li>• Some international stocks may not be available</li>
+          
+          {/* Content */}
+          <div className="p-6">
+            <div className="mb-6">
+              <div className="bg-white rounded-xl p-4 border border-blue-100 shadow-sm">
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  {error}
+                </p>
+              </div>
+            </div>
+            
+            {/* Helpful Information */}
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Suggestions */}
+              <div className="bg-white rounded-xl p-5 border border-blue-100 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                  <span className="text-blue-500">💡</span>
+                  How to Find Stocks
+                </h3>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400 mt-1">•</span>
+                    <span>Use correct ticker symbols (e.g., <strong>AAPL</strong> for Apple)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400 mt-1">•</span>
+                    <span>Check if the company is publicly traded</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400 mt-1">•</span>
+                    <span>Some international stocks may not be available</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400 mt-1">•</span>
+                    <span>Try searching for the company name first</span>
+                  </li>
                 </ul>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <span className="text-sm text-orange-600">Quick try:</span>
-                  {['AAPL', 'GOOGL', 'MSFT'].map(symbol => (
+              </div>
+              
+              {/* Popular Stocks */}
+              <div className="bg-white rounded-xl p-5 border border-blue-100 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                  <span className="text-green-500">📈</span>
+                  Popular Stocks to Try
+                </h3>
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                  {['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'META', 'NVDA', 'NFLX'].map(symbol => (
                     <button 
                       key={symbol}
                       onClick={() => handleStockClick(symbol)}
-                      className="px-2 py-1 text-xs bg-orange-100 hover:bg-orange-200 text-orange-700 rounded transition-colors"
+                      className="px-3 py-2 text-sm bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 text-blue-700 rounded-lg border border-blue-200 transition-all duration-200 font-medium"
                     >
                       {symbol}
                     </button>
                   ))}
                 </div>
+                <p className="text-xs text-gray-500">
+                  Click any symbol above to see real-time data
+                </p>
               </div>
-            )}
+            </div>
+            
+            {/* Additional Help */}
+            <div className="mt-6 bg-blue-50 rounded-xl p-4 border border-blue-200">
+              <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                <span>ℹ️</span>
+                Need More Help?
+              </h4>
+              <div className="text-sm text-blue-700 space-y-1">
+                <p>• <strong>New to stocks?</strong> Start with popular companies like Apple (AAPL) or Google (GOOGL)</p>
+                <p>• <strong>Looking for a specific company?</strong> Search for their official ticker symbol</p>
+                <p>• <strong>Data not available?</strong> Some stocks may have limited data or be delisted</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // Regular error (not stock not found)
+    return (
+      <div className="p-6 mt-4 border border-red-300 rounded-xl shadow bg-red-50">
+        <div className="flex items-start gap-3">
+          <div className="text-red-600 mt-0.5">⚠️</div>
+          <div className="flex-1">
+            <p className="text-red-700 font-medium mb-2">Error</p>
+            <p className="text-red-600 text-sm mb-3">{error}</p>
           </div>
         </div>
       </div>
@@ -84,129 +148,78 @@ export default function StockCard() {
     return (
       <div className="space-y-6">
         {/* Welcome/Empty State Card */}
-        <div className="p-8 border rounded-xl shadow-lg bg-gradient-to-br from-blue-50 to-indigo-50">
-          <div className="text-center">
-            <div className="text-6xl mb-4">📊</div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-3">Welcome to Stock Calculator</h2>
-            <p className="text-gray-600 mb-6">
-              Search for any stock symbol above to get instant P/E ratios, financial metrics, and professional analysis
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6 mt-6">
-            {/* Popular Stocks */}
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                🔥 Popular Stocks to Try
-              </h3>
-              <div className="space-y-3">
-                <button 
-                  onClick={() => handleStockClick('AAPL')}
-                  className="w-full flex justify-between items-center py-3 px-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors text-left"
-                >
-                  <div>
-                    <span className="font-medium text-blue-600">AAPL</span>
-                    <span className="text-gray-500 ml-2">Apple Inc.</span>
-                  </div>
-                  <span className="text-sm text-gray-500">Tech Giant</span>
-                </button>
-                <button 
-                  onClick={() => handleStockClick('GOOGL')}
-                  className="w-full flex justify-between items-center py-3 px-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors text-left"
-                >
-                  <div>
-                    <span className="font-medium text-blue-600">GOOGL</span>
-                    <span className="text-gray-500 ml-2">Alphabet</span>
-                  </div>
-                  <span className="text-sm text-gray-500">Search & AI</span>
-                </button>
-                <button 
-                  onClick={() => handleStockClick('TSLA')}
-                  className="w-full flex justify-between items-center py-3 px-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors text-left"
-                >
-                  <div>
-                    <span className="font-medium text-blue-600">TSLA</span>
-                    <span className="text-gray-500 ml-2">Tesla Inc.</span>
-                  </div>
-                  <span className="text-sm text-gray-500">EV Leader</span>
-                </button>
-                <button 
-                  onClick={() => handleStockClick('MSFT')}
-                  className="w-full flex justify-between items-center py-3 px-4 border-b border-gray-100 hover:bg-gray-50 rounded-lg transition-colors text-left"
-                >
-                  <div>
-                    <span className="font-medium text-blue-600">MSFT</span>
-                    <span className="text-gray-500 ml-2">Microsoft</span>
-                  </div>
-                  <span className="text-sm text-gray-500">Software</span>
-                </button>
-                <button 
-                  onClick={() => handleStockClick('NVDA')}
-                  className="w-full flex justify-between items-center py-3 px-4 hover:bg-gray-50 rounded-lg transition-colors text-left"
-                >
-                  <div>
-                    <span className="font-medium text-blue-600">NVDA</span>
-                    <span className="text-gray-500 ml-2">NVIDIA</span>
-                  </div>
-                  <span className="text-sm text-gray-500">AI Chips</span>
-                </button>
+        <div className="mt-6 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl shadow-lg overflow-hidden">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-4">
+            <div className="flex items-center gap-3">
+              <div className="text-2xl">📈</div>
+              <div>
+                <h2 className="text-xl font-bold text-white">Welcome to Stock Calculator</h2>
+                <p className="text-green-100 text-sm">Get real-time stock quotes, P/E ratios, and comprehensive financial metrics</p>
               </div>
             </div>
-
+          </div>
+          
+          {/* Content */}
+          <div className="p-6">
             {/* What You'll Get */}
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                ✨ What You'll Get
+            <div className="bg-white rounded-xl p-5 border border-green-100 shadow-sm mb-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <span className="text-green-500">🚀</span>
+                What You'll Get
               </h3>
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <div className="text-green-500 mt-0.5">📈</div>
-                  <div>
-                    <div className="font-medium text-gray-700">P/E Ratio Analysis</div>
-                    <div className="text-sm text-gray-500">See if stocks are overvalued/undervalued</div>
-                  </div>
+              <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-600">
+                <div>
+                  <p className="font-medium mb-2 text-green-700">📊 Real-time Data:</p>
+                  <ul className="space-y-1">
+                    <li>• Current price & daily change</li>
+                    <li>• Volume & trading range</li>
+                    <li>• 52-week high/low</li>
+                  </ul>
                 </div>
-                <div className="flex items-start gap-3">
-                  <div className="text-blue-500 mt-0.5">💰</div>
-                  <div>
-                    <div className="font-medium text-gray-700">Financial Metrics</div>
-                    <div className="text-sm text-gray-500">Market cap, EPS, Beta, dividends</div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="text-purple-500 mt-0.5">🧮</div>
-                  <div>
-                    <div className="font-medium text-gray-700">Visual Calculations</div>
-                    <div className="text-sm text-gray-500">See exactly how P/E ratios work</div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="text-orange-500 mt-0.5">📊</div>
-                  <div>
-                    <div className="font-medium text-gray-700">Smart Analysis</div>
-                    <div className="text-sm text-gray-500">Automatic insights and trends</div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="text-teal-500 mt-0.5">⚡</div>
-                  <div>
-                    <div className="font-medium text-gray-700">Real-Time Data</div>
-                    <div className="text-sm text-gray-500">Live market data from Alpha Vantage</div>
-                  </div>
+                <div>
+                  <p className="font-medium mb-2 text-green-700">💰 Financial Metrics:</p>
+                  <ul className="space-y-1">
+                    <li>• P/E ratio & EPS</li>
+                    <li>• Market capitalization</li>
+                    <li>• Dividend yield & beta</li>
+                  </ul>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Quick Tips */}
-          <div className="mt-6 p-4 bg-white rounded-lg border-l-4 border-blue-500">
-            <h4 className="font-semibold text-gray-800 mb-2">💡 Quick Tips</h4>
-            <div className="text-sm text-gray-600 space-y-1">
-              <div>• <strong>Click the stocks above</strong> to try them instantly</div>
-              <div>• Use stock ticker symbols (AAPL, GOOGL, MSFT)</div>
-              <div>• Search works for most US-listed companies</div>
-              <div>• P/E ratios help identify value vs growth stocks</div>
-              <div>• High P/E (&gt;25) = Growth expectations, Low P/E (&lt;15) = Value opportunity</div>
+            
+            {/* Quick Start */}
+            <div className="bg-white rounded-xl p-5 border border-green-100 shadow-sm mb-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <span className="text-blue-500">💡</span>
+                Quick Start
+              </h3>
+              <p className="text-gray-600 mb-4">Try searching for popular stocks:</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'META', 'NVDA', 'NFLX'].map(symbol => (
+                  <button 
+                    key={symbol}
+                    onClick={() => handleStockClick(symbol)}
+                    className="px-3 py-2 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 text-green-700 rounded-lg border border-green-200 transition-all duration-200 font-medium"
+                  >
+                    {symbol}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            {/* Quick Tips */}
+            <div className="bg-green-50 rounded-xl p-4 border border-green-200">
+              <h4 className="font-semibold text-green-800 mb-2 flex items-center gap-2">
+                <span>💡</span>
+                Quick Tips
+              </h4>
+              <div className="text-sm text-green-700 space-y-1">
+                <p>• <strong>Use ticker symbols</strong> (e.g., AAPL for Apple Inc.)</p>
+                <p>• <strong>Press Enter</strong> or click Search to get data</p>
+                <p>• <strong>Click any stock above</strong> for instant results</p>
+                <p>• <strong>Data updates in real-time</strong> from Alpha Vantage</p>
+              </div>
             </div>
           </div>
         </div>
