@@ -8,7 +8,11 @@ export default function Home() {
   const { query, setStockData, setIsLoading, setError, isLoading } = useStockStore();
 
   async function handleSearch() {
-    if (!query.trim()) return;
+    console.log('handleSearch called, query:', query, 'isLoading:', isLoading);
+    if (!query.trim()) {
+      console.log('Query is empty, returning early');
+      return;
+    }
     
     setIsLoading(true);
     setError(null);
@@ -26,7 +30,7 @@ export default function Home() {
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && query.trim() && !isLoading) {
       handleSearch();
     }
   };
@@ -41,10 +45,13 @@ export default function Home() {
         </div>
         
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <div className="flex gap-3" onKeyPress={handleKeyPress}>
-            <SearchBar />
+          <div className="flex gap-3">
+            <SearchBar onKeyPress={handleKeyPress} />
             <button 
-              onClick={handleSearch} 
+              onClick={() => {
+                console.log('Button clicked! Query:', query, 'Trim:', query.trim(), 'IsLoading:', isLoading);
+                handleSearch();
+              }} 
               disabled={isLoading || !query.trim()}
               className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl font-medium transition-colors flex items-center gap-2"
             >
