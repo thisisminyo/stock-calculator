@@ -51,11 +51,23 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-6">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">📈 Stock Calculator</h1>
-          <p className="text-gray-600">Get real-time stock quotes with P/E ratios and financial metrics</p>
-          <p className="text-sm text-gray-500">Powered by Alpha Vantage API</p>
-        </div>
+                         <div className="text-center mb-8">
+                   <button 
+                     onClick={() => {
+                       setSearchQuery("");
+                       setStockData(null);
+                       setError(null);
+                       setQuery("");
+                     }}
+                     className="group transition-all duration-200 hover:scale-105"
+                   >
+                     <h1 className="text-4xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors cursor-pointer">
+                       📈 Stock Calculator
+                     </h1>
+                   </button>
+                   <p className="text-gray-600">Get real-time stock quotes with P/E ratios and financial metrics</p>
+                   <p className="text-sm text-gray-500">Powered by Alpha Vantage API</p>
+                 </div>
         
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
           <div className="flex gap-3">
