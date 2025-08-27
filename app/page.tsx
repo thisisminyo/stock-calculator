@@ -24,8 +24,13 @@ export default function Home() {
       const res = await axios.get(`/api/stocks?query=${queryToSearch}`);
       setStockData(res.data);
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || "Failed to fetch stock data";
-      setError(errorMessage);
+      if (error.response?.status === 404) {
+        setError(`No results found for "${queryToSearch}". Please check the stock symbol and try again.`);
+      } else if (error.response?.status === 429) {
+        setError("API rate limit reached. Please wait a moment and try again.");
+      } else {
+        setError(error.response?.data?.error || "Failed to fetch stock data. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
