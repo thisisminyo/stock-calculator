@@ -172,7 +172,7 @@ export default function StockCard() {
               <div>• Use stock ticker symbols (AAPL, GOOGL, MSFT)</div>
               <div>• Search works for most US-listed companies</div>
               <div>• P/E ratios help identify value vs growth stocks</div>
-              <div>• High P/E (>25) = Growth expectations, Low P/E (<15) = Value opportunity</div>
+              <div>• High P/E (&gt;25) = Growth expectations, Low P/E (&lt;15) = Value opportunity</div>
             </div>
           </div>
         </div>
